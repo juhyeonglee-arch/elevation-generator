@@ -32,7 +32,7 @@
 
 > 설치 없이 브라우저 링크만 여는 웹판을 준비하고 있습니다. 나오면 이 자리에 링크를 적겠습니다.
 
-**윈도우(설치 없이)**: [Releases](../../releases)에서 윈도우 묶음 zip을 받아 풀고 `입면도 실행.bat`을 더블클릭하면 브라우저에 화면이 열립니다.
+**윈도우(설치 없이)**: [Releases](../../releases)에서 `elevation_windows_…zip`을 받아 '모두 압축 풀기' 한 뒤 `입면도 실행.bat`을 더블클릭하면 브라우저에 화면이 열립니다. 이 묶음은 자동 시험을 통과한 소스로 Actions가 만들고, 묶음 안의 파이썬으로 시험 모델을 실제로 돌려 본 뒤에 올립니다.
 
 화면은 네 단계입니다.
 
@@ -69,6 +69,7 @@ elevation_ai/          프로그램 본체
   web/index.html       화면
   fonts/, textures/    Pretendard 글꼴(OFL), 기본 텍스처·나무 그림
 native/raster.c        래스터라이저 C 소스 (dll/so는 Actions가 빌드)
+packaging/             윈도우 묶음 만들기(build_windows.py, 실행 bat, 안내문)
 tests/
   make_sample_model.py 가상의 시험 대지 3dm을 코드로 만듦(건물 2동, 주변 건물, 지형, 나무)
   test_sample.py       예제 입력 시험
@@ -88,6 +89,8 @@ tests/
    - 그림이 비어 있지 않고, 기준 그림(`tests/reference`)과 2% 넘게 달라지지 않았는지
    - 명령줄 실행과 화면 서버 흐름(모델 올리기 → 레이어 확인 → 만들기 → 결과 받기)이 끝까지 도는지
 4. 결과 그림은 Actions 실행 화면의 **Artifacts**(`result-images-…`)에 남습니다. 기준과 다르면 차이를 빨갛게 표시한 `diff_*.png`도 함께 남습니다.
+
+`v`로 시작하는 태그(예: `v0.9`)를 올리면 [윈도우 묶음](../../actions/workflows/release.yml)이 같은 시험을 거친 뒤 묶음을 만들고, 묶음으로 시험 모델을 돌려 본 다음 Releases에 올립니다.
 
 그림을 일부러 바꾸는 개선이면 같은 PR에서 `tests/reference`의 기준 그림도 바꿉니다.
 
