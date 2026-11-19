@@ -1,0 +1,8 @@
+# 윈도우 묶음(v0.9)에 들어 있던 판과 같게 고정
+numpy==2.5.4
+pillow==13.0.0
+matplotlib==3.11.2
+contourpy==1.4.0
+shapely==2.2.0
+rhino3dm==8.35.0
+ezdxf==1.4.5

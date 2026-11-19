@@ -1,0 +1,19 @@
+# 개인 도면·모델은 저장소에 넣지 않는다(사용자가 자기 파일을 지정해서 씀)
+*.3dm
+*.3dmbak
+*.dwg
+*.dxf
+!tests/**/*.dxf
+# 빌드 결과(native/raster.c 에서 Actions가 만든다)
+elevation_ai/raster_*.dll
+elevation_ai/raster_*.so
+# 파이썬·시험 부산물
+__pycache__/
+*.pyc
+.pytest_cache/
+test-output/
+.venv/
+venv/
+# 비밀 값
+.env
+*.key

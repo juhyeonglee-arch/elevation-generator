@@ -1,0 +1,67 @@
+name: 시험
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: test-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  native:
+    name: 네이티브 래스터 빌드
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: mingw 설치
+        run: sudo apt-get update -q && sudo apt-get install -y -q gcc-mingw-w64-x86-64
+      - name: 리눅스 so · 윈도우 dll 빌드
+        run: |
+          gcc -O3 -shared -fPIC -o raster_linux64.so native/raster.c -lm
+          x86_64-w64-mingw32-gcc -O3 -shared -o raster_win64.dll native/raster.c
+          ls -la raster_*
+      - uses: actions/upload-artifact@v4
+        with:
+          name: native-raster
+          path: raster_*
+          retention-days: 7
+
+  test:
+    name: 시험 (${{ matrix.os }})
+    needs: native
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    env:
+      PYTHONUTF8: "1"
+      ELEV_ARTIFACTS: ${{ github.workspace }}/test-output
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"   # 윈도우 묶음의 내장 파이썬과 같은 판
+          cache: pip
+      - uses: actions/download-artifact@v4
+        with:
+          name: native-raster
+          path: elevation_ai
+      - name: 설치
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt pytest
+      - name: 예제 입력 시험
+        run: python -m pytest tests -v --junitxml=test-output/junit.xml
+      - name: 결과 그림 올리기
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: result-images-${{ matrix.os }}
+          path: test-output
+          retention-days: 30
