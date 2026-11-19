@@ -53,7 +53,7 @@ jobs:
         shell: bash
         run: |
           STAGE="${{ steps.pack.outputs.stage }}"
-          PY="$STAGE/python/python.exe"
+          PY="$GITHUB_WORKSPACE/$STAGE/python/python.exe"
           mkdir -p smoke && cd smoke
           export PYTHONNOUSERSITE=1 USERPROFILE="$PWD/home" HOME="$PWD/home"
           "$PY" -s -c "import sys; print(sys.version); from elevation_ai import raster; raster._load(); print('raster', raster.BACKEND); assert raster.BACKEND == 'c'"
